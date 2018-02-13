@@ -1,7 +1,12 @@
 require("dotenv").config();
 
+var fs = require("fs");
+
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
+
+var action = process.argv[2];
+var value = process.argv[3];
 
 switch (action) {
   case "my-tweets":
@@ -31,5 +36,10 @@ function movieThis() {
 }
 
 function doWhatIsSays() {
-	
+  fs.readFile("random.txt", "utf8", function(err, data) {
+    if (err) {
+      return console.log(err);
+    }
+    // Use data from random text in spotifyThisSong function
+  });	
 }
