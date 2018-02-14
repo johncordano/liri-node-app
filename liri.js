@@ -18,8 +18,8 @@ var client = new Twitter(keys.twitter);
 var action = process.argv[2];
 var userInput = process.argv;
 
-
-switch (action) {
+function startBot(action){
+  switch (action) {
   case "my-tweets":
     myTweets();
     break;
@@ -34,7 +34,10 @@ switch (action) {
     break;
   default:
     console.log("Sorry, I can't help you :(");
+  }
 }
+startBot(action)  
+
 
 function myTweets() {
   if (userInput[3] === undefined || userInput[3] === ""){
@@ -155,18 +158,17 @@ function movieThis() {
 }
 
 function doWhatItSays() {
-  if (userInput[3] === undefined || userInput[3] === ""){
+  // if (userInput[3] === undefined || userInput[3] === ""){}
     
   fs.readFile("random.txt", "utf8", function(error, data) {
     if (error) {
-      return console.log(error);
+      console.log(error);
     }
     else{
-      console.log(data)
+      var dataArr = data.split(",");
+      var data = dataArr[0];
+      songName = dataArr[1];
+      startBot(data)
     }
-  var dataArr = data.split(",");
-
-  console.log(dataArr);
-  });
-  }	
+  })
 }
