@@ -72,7 +72,7 @@ function myTweets() {
       }
     }
     // If there are errors in API processing, display an error message in the console log.
-    else{
+    else {
        console.log("An error occurred.")
     }
   });
@@ -152,7 +152,7 @@ function movieThis() {
     console.log("Plot: " + results.Plot);
     console.log("Actors: " + results.Actors);
     // If there are errors in API processing, display an error message in the console log.
-    } else{
+    } else {
      console.log("An error occurred.", error);
     }  
   });
