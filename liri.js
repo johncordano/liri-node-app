@@ -1,24 +1,30 @@
+// Set the environmental variables to the global process.env object in the node.
 require("dotenv").config();
 
+// Create variables for the required node packages so that the node packages are available in this file.
 var Twitter = require('twitter');
 var Spotify = require('node-spotify-api');
 var request = require('request');
 var fs = require("fs");
+
+// Create a variable to make the keys.js file available in this file.
 var keys = require("./keys.js");
-var twitterHandle = "";
-var songName = "";
-var movieName = "";
-
-// console.log("keys", keys);
-// console.log(keys.twitter);
-
+// Create the variables to access the Spotify and Twitter keys.
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 
+// Create a global variable that myTweets function uses. 
+var twitterHandle = "";
+// Create a global variable the spotifyThisSong function and the doWhatItSays function use.
+var songName = "";
+// Create a global variable that the movieThis function uses.
+var movieName = "";
+// Create a global variable for process.argv[2] of the node. 
 var action = process.argv[2];
+// Create a global variable for process.argv[3] and any subsequent process.argv's of the node. 
 var userInput = process.argv;
 
-function startBot(action){
+// Create switch statement that determines the action (or case) that the user enters.
   switch (action) {
   case "my-tweets":
     myTweets();
@@ -33,142 +39,154 @@ function startBot(action){
     doWhatItSays();
     break;
   default:
-    console.log("Sorry, I can't help you :(");
-  }
-}
-startBot(action)  
+    console.log("Sorry, I can't help you.");
+  };
 
-
+// Process the my-tweets action
 function myTweets() {
+  // If the user doesn't enter a Twitter handle, use the Donald Trump handle as the Twitter handle.
   if (userInput[3] === undefined || userInput[3] === ""){
-    twitterHandle = "realDonaldTrump"
+    twitterHandle = "realDonaldTrump";
   }
-  else if(userInput.length - 3 > 1){
+  // If the user enters spaces in the Twitter handle, push the entered text strings into an array, join the text strings, and use the joined strings as the Twitter handle.
+  else if (userInput.length - 3 > 1) {
     var arr = [];
     for (var i = 3; i > userInput.length; i++) {
-      arr.push(userInput[i]);// push each item from userInput array to empty array  
+      arr.push(userInput[i]);  
     }
-    twitterHandle = arr.join("") //the array on ""
-  }else{
-    // 
-    twitterHandle = userInput[3]
+    twitterHandle = arr.join("");
+  // If the user enters the Twitter handle correcly, use the user input as the Twitter handle.
+  } else { 
+    twitterHandle = userInput[3];
   }
 
- 
+  // Forward the Twitter handle to the Twitter node package (or API).
   var params = {screen_name: twitterHandle};
   client.get('statuses/user_timeline', params, function(error, tweets, response) {
+    // If there are no errors in API processing, loop through the 20 returned tweets to display the tweet date and text in the console log.
     if (!error) {
-      //console.log("tweets", tweets);
       for (var i = 0; i < 20; i++) {
-        //console.log(i)
-        console.log("\nTweet date" + tweets[i].created_at + "\nTweet text: " + tweets[i].text);
+        console.log("\n########################################################");
+        console.log("Tweet date: " + tweets[i].created_at)
+        console.log("Tweet text: " + tweets[i].text);
       }
-
-
-      // tweets is an array we only want 20 tweets
-        // created_at
-        // text
     }
+    // If there are errors in API processing, display an error message in the console log.
     else{
-       //console.log("error", error);
-       console.log("oh no, something is not right!")
+       console.log("An error occurred.")
     }
   });
 };
 
+// Process the spotify-this-song action
 function spotifyThisSong() {
+  // If the user doesn't enter a song name, use "The Sign" as the song name.
   if (userInput[3] === undefined || userInput[3] === ""){
-    songName = "Close to You";
+    songName = "The Sign";
   }
-  else if(userInput.length - 3 > 1){
+  // If the user enters a song name with more than one word, concatinate the words followed by spaces to create the song name that is used.
+  else if (userInput.length - 3 > 1) {
     for (var i = 3; i < userInput.length; i++) {
-      if(userInput[i] === userInput.length){
+      if (userInput[i] === userInput.length) {
          songName = songName + userInput[i];  
-      }else {
+      } else {
         songName = songName + userInput[i] + " ";
       } 
     }
-  }else{ 
-    songName = userInput[3]
+  // If the user enters a song name with one word, use the user input as the song name.
+  } else { 
+    songName = userInput[3];
   }
 
- //console.log(songName);
-
+  // Forward the song name to the Spotify node package (or API).
   spotify.search({ type: 'track', query: songName }, function(err, data) {
+    // If there are errors in API processing, display an error message in the console log.
     if (err) {
-      return console.log('Error occurred: ' + err);
+      return console.log("An error occurred.", err);
     }
-    //console.log(data.tracks.items); 
-    // console.log(data.tracks.items[0].album);
+    // If there are no errors in API processing, loop through the 20 returned songs to display the song URL, song name, album name, and artists in the console log.
     var trackArr = data.tracks.items;
-
     for (var i = 0; i < trackArr.length; i++){
-      // spotify url
-      console.log("\n########################################################")
-      console.log("URL for song: " + data.tracks.items[i].album.artists[0].external_urls.spotify);
-      // song name
+      console.log("\n########################################################");
+      console.log("URL for Song: " + data.tracks.items[i].album.artists[0].external_urls.spotify);
       console.log("Song name: " + data.tracks.items[i].name);
-      // album name
       console.log("Album name: " + data.tracks.items[i].album.name);
-
       console.log("Artists: " + data.tracks.items[i].album.artists[0].name);
-      console.log("########################################################")
+      console.log("########################################################");
     }
   });
-}
+};
 
+// Process the movie-this action
 function movieThis() {
-
+  // If the user doesn't enter a movie name, use "Mr Nobody" as the movie name.
   if (userInput[3] === undefined || userInput[3] === ""){
     movieName = "Mr Nobody";
   }
-  else if(userInput.length - 3 > 1){
+  // If the user enters a movie name with more than one word, add a + between each word to create the movie name that is used.
+  else if (userInput.length - 3 > 1) {
     for (var i = 3; i < userInput.length; i++) {
-      if(userInput[i] === userInput.length){
-         movieName = movieName + userInput[i];  
-      }else {
+      if (userInput[i] === userInput.length) {
+        movieName = movieName + userInput[i];  
+      } else {
         movieName = movieName + userInput[i] + "+";
       } 
     }
-  }else{ 
-    movieName = userInput[3]
+  // If the user enters a movie name with one word, use the user input as the movie name.
+  } else { 
+    movieName = userInput[3];
   }
 
+  // Forward the movie name to the request node package (or API).
   var queryURL = "http://www.omdbapi.com/?apikey=trilogy&t=" + movieName;
   request(queryURL, function (error, response, body) {
+    // If there are no errors in API processing, display the movie information in the console log.
     var results = JSON.parse(body);
-  // Print the error if one occurred 
-  if (!error && response.statusCode === 200) {
-   //console.log('statusCode:', response && response.statusCode); 
-    console.log('Title:', results.Title);
-    console.log('Year:', results.Year);
-    console.log('Ratings - Internet Movie Database:', results.Ratings[0].Value);
-    console.log('Ratings - Rotten Tomatoes', results.Ratings[1].Value);
-    console.log('Country:', results.Country);
-    console.log('Language:', results.Language);
-    console.log('Plot:', results.Plot);
-    console.log('Actors:', results.Actors);
-  } else{
-     console.log('error:', error);
-  }
-  // Print the response status code if a response was received
-  
-});
-//
-}
+    if (!error && response.statusCode === 200) {
+    console.log("Title: " + results.Title);
+    console.log("Year: " + results.Year);
+    console.log("Ratings - Internet Movie Database: " + results.Ratings[0].Value);
+    console.log("Ratings - Rotten Tomatoes: " + results.Ratings[1].Value);
+    console.log("Country: " + results.Country);
+    console.log("Language: " + results.Language);
+    console.log("Plot: " + results.Plot);
+    console.log("Actors: " + results.Actors);
+    // If there are errors in API processing, display an error message in the console log.
+    } else{
+     console.log("An error occurred.", error);
+    }  
+  });
+};
 
+// Process the do-what-it-says action
 function doWhatItSays() {
-  // if (userInput[3] === undefined || userInput[3] === ""){}
-    
+  // Read the text in the random.txt file.   
   fs.readFile("random.txt", "utf8", function(error, data) {
+    // If there are errors in reading the file, display an error messaage in the consolde log.
     if (error) {
-      console.log(error);
-    }
-    else{
+      console.log("An error occurred.", error);
+    // If there are no errors in reading the file, create a variable that splits the spotify-this-song action and the default song name in the random.txt file.
+    } else {
       var dataArr = data.split(",");
       var data = dataArr[0];
-      songName = dataArr[1];
-      startBot(data)
+      var defaultSongName = dataArr[1];
+      // Forward the default song name to the Spotify node package (or API).
+      spotify.search({ type: 'track', query: defaultSongName }, function(err, data) {
+      // If there are errors in API processing, display an error message in the console log.
+      if (err) {
+        return console.log("An error occurred.", err);
+      }
+      // If there are no errors in API processing, loop through the 20 returned songs to display the song URL, song name, album name, and artists in the console log.
+      var trackArr = data.tracks.items;
+      for (var i = 0; i < trackArr.length; i++){
+        console.log("\n########################################################");
+        console.log("URL for Song: " + data.tracks.items[i].album.artists[0].external_urls.spotify);
+        console.log("Song name: " + data.tracks.items[i].name);
+        console.log("Album name: " + data.tracks.items[i].album.name);
+        console.log("Artists: " + data.tracks.items[i].album.artists[0].name);
+        console.log("########################################################");
+      }
+    });
     }
-  })
-}
+  });
+};
