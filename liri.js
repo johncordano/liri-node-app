@@ -108,8 +108,8 @@ function spotifyThisSong() {
     var trackArr = data.tracks.items;
     for (var i = 0; i < trackArr.length; i++){
       console.log("\n########################################################");
-      console.log("URL for Song: " + data.tracks.items[i].album.artists[0].external_urls.spotify);
       console.log("Song name: " + data.tracks.items[i].name);
+      console.log("Song URL: " + data.tracks.items[i].album.artists[0].external_urls.spotify);
       console.log("Album name: " + data.tracks.items[i].album.name);
       console.log("Artists: " + data.tracks.items[i].album.artists[0].name);
       console.log("########################################################");
