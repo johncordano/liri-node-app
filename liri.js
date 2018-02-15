@@ -70,9 +70,8 @@ function myTweets() {
         console.log("Tweet date: " + tweets[i].created_at)
         console.log("Tweet text: " + tweets[i].text);
       }
-    }
     // If there are errors in API processing, display an error message in the console log.
-    else {
+    } else {
        console.log("An error occurred.")
     }
   });
@@ -103,17 +102,18 @@ function spotifyThisSong() {
     // If there are errors in API processing, display an error message in the console log.
     if (err) {
       return console.log("An error occurred.", err);
-    }
     // If there are no errors in API processing, loop through the 20 returned songs to display the song URL, song name, album name, and artists in the console log.
-    var trackArr = data.tracks.items;
-    for (var i = 0; i < trackArr.length; i++){
-      console.log("\n########################################################");
-      console.log("Song name: " + data.tracks.items[i].name);
-      console.log("Song URL: " + data.tracks.items[i].album.artists[0].external_urls.spotify);
-      console.log("Album name: " + data.tracks.items[i].album.name);
-      console.log("Artists: " + data.tracks.items[i].album.artists[0].name);
-      console.log("########################################################");
-    }
+    } else {
+      var trackArr = data.tracks.items;
+      for (var i = 0; i < trackArr.length; i++){
+        console.log("\n########################################################");
+        console.log("Song name: " + data.tracks.items[i].name);
+        console.log("Song URL: " + data.tracks.items[i].album.artists[0].external_urls.spotify);
+        console.log("Album name: " + data.tracks.items[i].album.name);
+        console.log("Artists: " + data.tracks.items[i].album.artists[0].name);
+        console.log("########################################################");
+      }
+    } 
   });
 };
 
