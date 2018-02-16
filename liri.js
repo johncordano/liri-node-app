@@ -98,7 +98,7 @@ function spotifyThisSong() {
   }
 
   // Forward the song name to the Spotify node package (or API).
-  spotify.search({ type: 'track', query: songName }, function(err, data) {
+  spotify.search({ type: 'track', query: songName }, function (err, data) {
     // If there are errors in API processing, display an error message in the console log.
     if (err) {
       return console.log("An error occurred.", err);
@@ -162,7 +162,7 @@ function movieThis() {
 function doWhatItSays() {
   // Read the text in the random.txt file.   
   fs.readFile("random.txt", "utf8", function(error, data) {
-    // If there are errors in reading the file, display an error messaage in the consolde log.
+    // If there are errors in reading the file, display an error messaage in the console log.
     if (error) {
       console.log("An error occurred.", error);
     // If there are no errors in reading the file, create a variable that splits the spotify-this-song action and the default song name in the random.txt file.
@@ -171,7 +171,7 @@ function doWhatItSays() {
       var data = dataArr[0];
       var defaultSongName = dataArr[1];
       // Forward the default song name to the Spotify node package (or API).
-      spotify.search({ type: 'track', query: defaultSongName }, function(err, data) {
+      spotify.search({ type: 'track', query: defaultSongName }, function (err, data) {
       // If there are errors in API processing, display an error message in the console log.
       if (err) {
         return console.log("An error occurred.", err);
