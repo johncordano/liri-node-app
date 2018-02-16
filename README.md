@@ -12,6 +12,12 @@ In this interface, the user can enter any one of the following commands in a ter
 - do-what-it-says.
   This command uses the readFile function in the file system node package to read a text file and return the file's default song information from the Spotify node package.
 
+# Sample Screenshot
+
+The following image shows the data that is displayed in the terminal when you enter a command of movie-this followed by The Sound of Music.
+
+![terminal image](movieThis.png)
+
 # Tools Used
 
 - JavaScript
